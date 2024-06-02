@@ -1,0 +1,41 @@
+@page "/add-asp-net-role-claim"
+
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Добавить утверждения к роли</PageTitle>
+    <RadzenColumn SizeMD=12>
+    <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить утверждение к роли</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.AspNetRoleClaim" Data="@aspNetRoleClaim" Visible="@(aspNetRoleClaim != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Тип утверждения" Component="ClaimType" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetRoleClaim.ClaimType" Name="ClaimType" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Значение утверждения" Component="ClaimValue" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetRoleClaim.ClaimValue" Name="ClaimValue" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Роль *" Component="AspNetRole" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid Data="@aspNetRolesForRoleId" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                                        Placeholder="Выберите роль" style="display: block; width: 100%" @bind-Value="@aspNetRoleClaim.RoleId" Name="RoleId" />
+                <RadzenRequiredValidator Component="RoleId" Text="Требуется выбрать роль" />
+                                    </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

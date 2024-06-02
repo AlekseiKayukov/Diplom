@@ -1,0 +1,42 @@
+@page "/add-asp-net-user-claim"
+
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Добавление утверждений к пользователю</PageTitle>
+    <RadzenColumn SizeMD=12>
+    <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить утверждение к пользователю</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.AspNetUserClaim" Data="@aspNetUserClaim" Visible="@(aspNetUserClaim != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Тип утверждения" Component="ClaimType" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetUserClaim.ClaimType" Name="ClaimType" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Значение утверждения" Component="ClaimValue" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetUserClaim.ClaimValue" Name="ClaimValue" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пользователь *" Component="AspNetUser" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid Data="@aspNetUsersForUserId" TextProperty="Email" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите пользователя" style="display: block; width: 100%" @bind-Value="@aspNetUserClaim.UserId" Name="UserId"
+                           />
+                <RadzenRequiredValidator Component="UserId" Text="Требуется выбрать пользователя" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

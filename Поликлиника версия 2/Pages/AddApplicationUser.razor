@@ -1,0 +1,55 @@
+@page "/add-application-user"
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Добавление пользователя</PageTitle>
+<RadzenRow>
+    <RadzenColumn SizeMD="12">
+        <RadzenTemplateForm TItem="Polyclinic.Models.ApplicationUser" Data="@user" Visible="@(user != null)" Submit="@FormSubmit">
+            <RadzenAlert Title="Не удается создать пользователя" Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">@error</RadzenAlert>
+
+             <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Component="Email" style="width: 100%" Text="Электронная почта *" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(user.Email)" Name="Email" />
+                    <RadzenRequiredValidator Component="Email" Text="Требуется электронная почта" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Component="RoleNames" style="width: 100%" Text="Роли" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDown Data="@roles" Multiple="true" style="width: 100%" TextProperty="Name"
+                        @bind-Value="@(userRoles)" ValueProperty="Id" Name="Roles" />
+                </RadzenColumn>
+            </RadzenRow>
+             <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Component="Password" style="width: 100%" Text="Пароль *" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenPassword style="display: block; width: 100%" @bind-Value="@(user.Password)"
+                        Name="Password" />
+                    <RadzenRequiredValidator Component="Password" Text="Требуется ввести пароль" />
+                </RadzenColumn>
+            </RadzenRow>
+             <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Component="ConfirmPassword" style="width: 100%" Text="Подтвердите пароль *" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenPassword style="display: block; width: 100%" @bind-Value="@(user.ConfirmPassword)"
+                        Name="ConfirmPassword" />
+                    <RadzenRequiredValidator Component="ConfirmPassword" Text="Требуется подтвердить пароль" />
+                    <RadzenCompareValidator Text="Пароли должны совпадать" Component="ConfirmPassword" Value="@user.Password" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Click="@CancelClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+</RadzenRow>

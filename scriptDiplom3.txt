@@ -1,0 +1,85 @@
+CREATE TABLE Role (
+    Id INT,
+    Title NVARCHAR (50)
+);
+
+CREATE TABLE User (
+    Id INT,
+    Login NVARCHAR (50),
+    Password NVARCHAR (50),
+    IdRole INT REFERENCES Role (Id)
+);
+
+CREATE TABLE Specialization (
+    Id INT,
+    Title NVARCHAR (100)
+);
+
+CREATE TABLE Gender (
+    Id INT,
+    Title NVARCHAR (10)
+);
+
+CREATE TABLE Diagnosis (
+    Id INT PRIMARY KEY,
+    Title NVARCHAR (250) 
+);
+
+CREATE TABLE Doctor (
+    Id INT,
+    Surname NVARCHAR (50),
+    Name NVARCHAR (50),
+    Forename NVARCHAR (50),
+    Phone NVARCHAR (20),
+    IdGender INT REFERENCES Gender (Id),
+    IdSpecialization INT REFERENCES Specialization (Id),
+    IdUser INT REFERENCES User (Id)
+);
+
+CREATE TABLE Schedule (
+    Id INT PRIMARY KEY,
+    DateStart DATE,
+    TimeStart TIME,
+    TimeEnd TIME,
+    Duration INT,
+    Cabinet NVARCHAR (30),
+    IdDoctor INT REFERENCES Doctor (Id) 
+);
+
+CREATE TABLE Patient (
+    Id INT PRIMARY KEY,
+    IdUser INT REFERENCES User (Id),
+    Surname NVARCHAR (50),
+    Name NVARCHAR (50),
+    Forename NVARCHAR (50),
+    PlaceResidence NVARCHAR (255),
+    Address NVARCHAR (100),
+    Phone NVARCHAR (20),
+    Email NVARCHAR (50),
+    DateOfBirth DATE,
+    IdGender INT REFERENCES Gender (Id),
+    NumberCard INT,
+    MHIpolicy NVARCHAR (19),
+    VMIpolicy NVARCHAR (19),
+    PassportSeries NVARCHAR (5),
+    PassportNumber NVARCHAR (6),
+    DateOfIssue DATE
+);
+
+CREATE TABLE Record (
+    Id INT  PRIMARY KEY,
+    IdSchedule INT REFERENCES Schedule (Id),
+    TimePeriod TIME,
+    IdPatient INT REFERENCES Patient (Id) 
+);
+
+CREATE TABLE Visit (
+    Id INT PRIMARY KEY,
+    DateVisit DATE,
+    TimeVisit TIME,
+    Complaint NVARCHAR (500),
+    Appointments NVARCHAR (500),
+    IdDiagnosis INT REFERENCES Diagnosis (Id),
+    IdRecord INT REFERENCES Record (Id), 
+    Status NVARCHAR (20)
+);

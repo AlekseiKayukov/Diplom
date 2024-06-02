@@ -1,0 +1,57 @@
+@page "/profile"
+@attribute [Authorize]
+
+<PageTitle>Профиль</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12">
+            <RadzenText Text="Профиль" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn SizeMD="12">
+            <RadzenTemplateForm Method="post" Submit="@FormSubmit" TItem="Polyclinic.Models.ApplicationUser" Data="@user"
+                Visible="@(user != null)">
+                <RadzenAlert Size="AlertSize.Large" Shade="Shade.Light" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Title="Невозможно изменить пароль" Visible="@errorVisible">@error</RadzenAlert>
+                <RadzenAlert Size="AlertSize.Large" Shade="Shade.Light" AlertStyle="AlertStyle.Success" Variant="Variant.Flat" Visible="@successVisible">
+                    Ваш пароль был изменен.
+                </RadzenAlert>
+
+                <RadzenRow style="margin-bottom: 1rem">
+                    <RadzenColumn SizeMD="3">
+                        <RadzenLabel Component="OldPassword" style="width: 100%" Text="Старый пароль" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="9">
+                        <RadzenPassword @bind-Value="@oldPassword" style="display: block; width: 100%"
+                            Name="OldPassword" />
+                        <RadzenRequiredValidator Component="OldPassword" Text="Введите свой текущий пароль" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow style="margin-bottom: 1rem">
+                    <RadzenColumn SizeMD="3">
+                        <RadzenLabel Component="NewPassword" style="width: 100%" Text="Новый пароль" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="9">
+                        <RadzenPassword @bind-Value="@newPassword" style="display: block; width: 100%"
+                            Name="NewPassword" />
+                        <RadzenRequiredValidator Component="NewPassword" Text="Введите свой новый пароль" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow style="margin-bottom: 1rem">
+                    <RadzenColumn SizeMD="3">
+                        <RadzenLabel Component="ConfirmPassword" style="width: 100%" Text="Подтвердите пароль" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="9">
+                        <RadzenPassword @bind-Value="@confirmPassword" style="display: block; width: 100%"
+                            Name="ConfirmPassword" />
+                        <RadzenRequiredValidator Component="ConfirmPassword" Text="Подтвердите свой новый пароль" />
+                        <RadzenCompareValidator Component="ConfirmPassword" Text="Пароли должны быть одинаковыми" Value="@newPassword" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                        <RadzenButton ButtonType="ButtonType.Submit" Text="Поменять пароль" Variant="Variant.Flat" />
+                </RadzenStack>
+            </RadzenTemplateForm>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>

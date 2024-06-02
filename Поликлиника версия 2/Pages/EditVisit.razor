@@ -1,0 +1,97 @@
+@page "/edit-visit"
+
+@attribute [Authorize(Roles = "Доктор")]
+
+<PageTitle>Редактировать посещения</PageTitle>
+<RadzenRow>
+    <RadzenColumn SizeMD="9">
+    <RadzenLabel style="font-weight: bold" Text="Объект больше не доступен." Visible="@(!canEdit)" />
+    </RadzenColumn>
+    <RadzenColumn SizeMD="3">
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" style="margin-bottom: 20px" Text="Закрыть" Visible="@(!canEdit)" Click="@CancelButtonClick" />
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow>
+    <RadzenColumn SizeMD="9">
+    <RadzenLabel style="font-weight: bold" Text="Другой пользователь внес противоречивые изменения в одно или несколько измененных вами полей. Пожалуйста, перезагрузите." Visible="@hasChanges" />
+    </RadzenColumn>
+    <RadzenColumn SizeMD="3">
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="autorenew" style="margin-bottom: 20px" Text="Обновить" Visible="@hasChanges" Click="@ReloadButtonClick" />
+    </RadzenColumn>
+</RadzenRow>
+
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить посещение</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.Visit" Data="@visit" Visible="@(visit != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Дата *" Component="DateVisit" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="dd/MM/yyyy" ShowTime="false" style="display: block; width: 100%" @bind-Value="@visit.DateVisit" Name="DateVisit" Placeholder="00.00.0000" />
+                <RadzenRequiredValidator Component="DateVisit" Text="Требуется указать дату посещения" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Время *" Component="TimeVisit" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker style="display: block; width: 100%" @bind-Value="@visit.TimeVisit" Name="TimeVisit" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Placeholder="00:00" />
+                <RadzenRequiredValidator Component="TimeVisit" Text="Требуется указать время посещения" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Жалоба" Component="Complaint" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextArea style="display: block; width: 100%" @bind-Value="@visit.Complaint" Name="Complaint" Placeholder="Головные пульсации..." />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Назначения" Component="Appointments" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextArea style="display: block; width: 100%" @bind-Value="@visit.Appointments" Name="Appointments" Placeholder="Прием лекарств..." />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Диагноз" Component="Diagnosis" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@diagnosesForIdDiagnosis" TextProperty="Title" ValueProperty="Id" AllowClear=true SearchTextPlaceholder="Поиск..."
+                         Placeholder="Выберите диагноз" style="display: block; width: 100%" @bind-Value="@visit.IdDiagnosis" Name="IdDiagnosis" EmptyText="Нет записей для отображения"
+                           />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Запись *" Component="Record" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid Data="@recordsForIdRecord" TextProperty="Schedule.CabinetWorkTime" ValueProperty="Id" AllowClear=true SearchTextPlaceholder="Поиск..."
+                         Placeholder="Выберите запись" style="display: block; width: 100%" @bind-Value="@visit.IdRecord" Name="IdRecord" EmptyText="Нет записей для отображения"
+                         AllowFiltering="false" AllowSorting="false" ShowSearch="false" FilterAsYouType="false" FocusFilterOnPopup="false"
+                           />
+                <RadzenRequiredValidator Component="IdRecord" Text="Требуется выбрать запись" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Статус *" Component="Status" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@visit.Status" Name="Status" Placeholder="Положительный" />
+                <RadzenRequiredValidator Component="Status" Text="Требуется указать статус" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

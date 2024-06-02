@@ -1,0 +1,39 @@
+@page "/add-record"
+
+@attribute [Authorize(Roles = "Регистратор")]
+
+<PageTitle>Добавление записи</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить запись</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.Record" Data="@record" Visible="@(record != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Кабинет *" Component="Schedule" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@schedulesForIdSchedule" TextProperty="CabinetWorkTime" ValueProperty="Id" AllowClear=true EmptyText="Нет записей для отображения"
+                         Placeholder="Выберите кабинет" style="display: block; width: 100%" @bind-Value="@record.IdSchedule" Name="IdSchedule" SearchTextPlaceholder="Поиск..."
+                         AllowFiltering="false" AllowSorting="false" ShowSearch="false" FilterAsYouType="false" FocusFilterOnPopup="false"
+                           />
+                <RadzenRequiredValidator Component="IdSchedule" Text="Требуется выбрать кабинет" />
+                </RadzenColumn> 
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пациент *" Component="Patient" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@patientsForIdPatient" TextProperty="PatientFullName" ValueProperty="Id" AllowClear=true EmptyText="Нет записей для отображения"
+                         Placeholder="Выберите пациента" style="display: block; width: 100%" @bind-Value="@record.IdPatient" Name="IdPatient" SearchTextPlaceholder="Поиск..."
+                         AllowFiltering="false" AllowSorting="false" ShowSearch="false" FilterAsYouType="false" FocusFilterOnPopup="false"
+                           />
+                <RadzenRequiredValidator Component="IdPatient" Text="Требуется выбрать пациента" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

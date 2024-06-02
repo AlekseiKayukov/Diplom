@@ -1,0 +1,25 @@
+@page "/"
+@attribute [Authorize]
+
+<PageTitle>Главная</PageTitle>
+
+<RadzenRow Gap="5" RowGap="5">
+    <RadzenColumn Size="12">
+        <RadzenText Text="Адрес поликлиники" TextStyle="Radzen.Blazor.TextStyle.DisplayH2" TagName="Radzen.Blazor.TagName.Auto"></RadzenText>
+    </RadzenColumn>
+</RadzenRow>
+
+<RadzenRow Gap="0" Style="width: 100%; height: 100%;">
+    <RadzenColumn Size="12" Style="min-width: 100%">
+        <RadzenGoogleMap @ref=map style="height: 700px" Options=@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })
+                    Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 53.882266, Lng = 59.225448 }) MarkerClick=@OnMarkerClick Visible="true" FitBoundsToMarkersOnUpdate="false">
+                <Markers>
+                    <RadzenGoogleMapMarker Title="Polyclinik" Label="Адрес поликлиники (корпус № 1)" Position=@(new GoogleMapPosition() { Lat = 53.882266, Lng = 59.225448 }) />
+                <RadzenGoogleMapMarker Title="Polyclinik" Label="Адрес поликлиники (копрус № 2)" Position=@(new GoogleMapPosition() { Lat = 53.890860, Lng = 59.198196 }) />
+                <RadzenGoogleMapMarker Title="Polyclinik" Label="Адрес поликлиники (копрус № 3)" Position=@(new GoogleMapPosition() { Lat = 53.867347, Lng = 59.206388 }) />
+            </Markers>
+            </RadzenGoogleMap>
+    </RadzenColumn>
+</RadzenRow>
+
+

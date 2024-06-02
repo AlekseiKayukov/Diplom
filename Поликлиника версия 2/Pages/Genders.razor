@@ -1,0 +1,59 @@
+@page "/genders"
+
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Пол</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Пол" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenSplitButton Icon="get_app" Text="Экспорт" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
+                    <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
+                    <RadzenSplitButtonItem Text="CSV" Value="csv" />
+                </RadzenSplitButton>
+                <RadzenButton Icon="add_circle_outline" Text="Добавить" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenTextBox Placeholder="Поиск ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px" Density="Density.Compact" AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@genders" TItem="Polyclinic.Models.data.Gender" RowSelect=@ClickDataGridRow RowDoubleClick="@EditRow" EmptyText="Нет записей для отображения" 
+                            EndsWithText="Заканчивается на" EnumFilterSelectText="Выбирать..." EnumNullFilterText="Нет значений" 
+                            EqualsText="Равняется" ExpandChildItemAriaLabel="Разверните дочерний элемент" ExpandGroupAriaLabel="Расширить группу" 
+                            FilterText="Фильтр" FilterValueArialLabel="значение фильтра" FirstPageAriaLabel="Перейти на первую страницу." 
+                            FirstPageTitle="Первая страница." GreaterThanText="Больше, чем" GreaterThanOrEqualsText="Больше или равно" 
+                            IsEmptyText="Пуст" IsNotEmptyText="Не является пустым" IsNotNullText="Не равно нулю" IsNullText="Равно нулю" 
+                            LastPageAriaLabel="Перейти к последней странице." LastPageTitle="Последняя страница" LessThanOrEqualsText="Меньше или равно" 
+                            LessThanText="Меньше, чем" LogicalOperatorArialLabel="оператор логического фильтра" NextPageAriaLabel="Перейдите на следующую страницу." 
+                            NextPageTitle="Следующая страница" NotEqualsText="Не равны" OrOperatorText="Или" PageAriaLabelFormat="Перейти на страницу {0}." 
+                            PageSizeText="элементы на странице" PageTitleFormat="Страница {0}" PagingSummaryFormat="Страница {0} из {1} ({2} элементов)" 
+                            PrevPageAriaLabel="Перейдите на предыдущую страницу." PrevPageTitle="Предыдущая страница" RemoveGroupArialLabel="Удалить группу" 
+                            SecondFilterOperatorArialLabel="второй оператор фильтра" SecondFilterValueArialLabel="второе значение фильтра" 
+                            SelectVisibleColumnsArialLabel="выберите видимые столбцы" StartsWithText="Начинается с" AndOperatorText="И" ApplyFilterText="Применить" 
+                            ClearFilterText="Очистить" AllColumnsText="Все" ColumnsShowingText="столбцы, показывающие" ColumnsText="Столбцы" 
+                            ContainsText="Содержит" DoesNotContainText="Не содержит" FilterOperatorArialLabel="оператор фильтра">
+            <Columns>
+                <RadzenDataGridColumn TItem="Polyclinic.Models.data.Gender" Property="Id" Title="Id" Visible="false">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Polyclinic.Models.data.Gender" Property="Title" Title="Название">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Polyclinic.Models.data.Gender" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="gender">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, gender)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>

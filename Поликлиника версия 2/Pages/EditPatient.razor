@@ -1,0 +1,173 @@
+@page "/edit-patient"
+
+@attribute [Authorize(Roles = "Регистратор")]
+
+<PageTitle>Редактировать пациента</PageTitle>
+<RadzenRow>
+    <RadzenColumn SizeMD="9">
+    <RadzenLabel style="font-weight: bold" Text="Объект больше не доступен." Visible="@(!canEdit)" />
+    </RadzenColumn>
+    <RadzenColumn SizeMD="3">
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" style="margin-bottom: 20px" Text="Закрыть" Visible="@(!canEdit)" Click="@CancelButtonClick" />
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow>
+    <RadzenColumn SizeMD="9">
+    <RadzenLabel style="font-weight: bold" Text="Другой пользователь внес противоречивые изменения в одно или несколько измененных вами полей. Пожалуйста, перезагрузите." Visible="@hasChanges" />
+    </RadzenColumn>
+    <RadzenColumn SizeMD="3">
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="autorenew" style="margin-bottom: 20px" Text="Обновить" Visible="@hasChanges" Click="@ReloadButtonClick" />
+    </RadzenColumn>
+</RadzenRow>
+
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Невозможно сохранить пациента</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.Patient" Data="@patient" Visible="@(patient != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пользователь *" Component="AspNetUser" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@aspNetUsersForIdUser" TextProperty="Email" ValueProperty="Id" AllowClear=true EmptyText="Нет записей для отображения"
+                         Placeholder="Выберите пользователя" style="display: block; width: 100%" @bind-Value="@patient.IdUser" Name="IdUser" SearchTextPlaceholder="Поиск..."
+                           />
+                <RadzenRequiredValidator Component="IdUser" Text="Требуется выбрать пользователя" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Фамилия *" Component="Surname" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@patient.Surname" Name="Surname" Placeholder="Иванов"/>
+                <RadzenRequiredValidator Component="Surname" Text="Требуется указать фамилию" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Имя *" Component="Name" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@patient.Name" Name="Name" Placeholder="Иван"/>
+                <RadzenRequiredValidator Component="Name" Text="Требуется указать имя" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Отчество" Component="Forename" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@patient.Forename" Name="Forename" Placeholder="Иванович"/>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Место жительства *" Component="PlaceResidence" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@patient.PlaceResidence" Name="PlaceResidence" Placeholder="Челябинск"/>
+                <RadzenRequiredValidator Component="PlaceResidence" Text="Требуется указать место жительства" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Адрес *" Component="Address" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@patient.Address" Name="Address" Placeholder="Жукова 12"/>
+                <RadzenRequiredValidator Component="Address" Text="Требуется указать адрес" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Дата рождения *" Component="DateOfBirth" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%" @bind-Value="@patient.DateOfBirth" Max=@CurrentDate Name="DateOfBirth" Placeholder="00.00.0000" />
+                <RadzenRequiredValidator Component="DateOfBirth" Text="Требуется указать дату рождения" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Телефон" Component="Phone" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenMask style="display: block; width: 100%" @bind-Value="@patient.Phone" Name="Phone" Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000"/>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Электронная почта" Component="Email" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@patient.Email" Name="Email" Placeholder="ivanov@mail.ru" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пол *" Component="Gender" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@gendersForIdGender" TextProperty="Title" ValueProperty="Id" AllowClear=true EmptyText="Нет записей для отображения"
+                         Placeholder="Выберит пол" style="display: block; width: 100%" @bind-Value="@patient.IdGender" Name="IdGender" SearchTextPlaceholder="Поиск..."
+                           />
+                <RadzenRequiredValidator Component="IdGender" Text="Требуется выбрать пол" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Номер карты *" Component="NumberCard" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenNumeric style="display: block; width: 100%" Min="1" Placeholder="0" @bind-Value="@patient.NumberCard" Name="NumberCard" />
+                <RadzenRequiredValidator Component="NumberCard" Text="Требуется указать номер карты" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Полюс ОМС *" Component="MHIpolicy" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                <RadzenMask style="display: block; width: 100%" @bind-Value="@patient.MHIpolicy" Name="MHIpolicy" Mask="**** **** **** ****" CharacterPattern="[0-9]" Placeholder="0000 0000 0000 0000" />
+                <RadzenRequiredValidator Component="MHIpolicy" Text="Требуется указать полюс ОМС" />
+            </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Полюс ДМС" Component="VMIpolicy" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenMask style="display: block; width: 100%" @bind-Value="@patient.VMIpolicy" Name="VMIpolicy" Mask="**** **** **** ****" CharacterPattern="[0-9]" Placeholder="0000 0000 0000 0000"/>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Серия паспорта" Component="PassportSeries" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenMask style="display: block; width: 100%" @bind-Value="@patient.PassportSeries" Name="PassportSeries" Mask="****" CharacterPattern="[0-9]" Placeholder="0000"/>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Номер паспорта" Component="PassportNumber" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenMask style="display: block; width: 100%" @bind-Value="@patient.PassportNumber" Name="PassportNumber" Mask="*****" CharacterPattern="[0-9]" Placeholder="00000"/>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Дата получения" Component="DateOfIssue" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="dd/MM/yyyy" ShowTime="false" style="display: block; width: 100%" @bind-Value="@patient.DateOfIssue" Name="DateOfIssue" Placeholder="00.00.0000" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

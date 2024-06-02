@@ -1,0 +1,37 @@
+@page "/add-asp-net-user-role"
+
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Добавить пользователю роль</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить пользователю роль</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.AspNetUserRole" Data="@aspNetUserRole" Visible="@(aspNetUserRole != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пользователь *" Component="AspNetUser" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@aspNetUsersForUserId" TextProperty="Email" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите пользователя" style="display: block; width: 100%" @bind-Value="@aspNetUserRole.UserId" Name="UserId"
+                           />
+                <RadzenRequiredValidator Component="UserId" Text="Требуется выбрать пользователя" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Роль *" Component="AspNetRole" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@aspNetRolesForRoleId" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите роль" style="display: block; width: 100%" @bind-Value="@aspNetUserRole.RoleId" Name="RoleId"
+                           />
+                <RadzenRequiredValidator Component="RoleId" Text="Требуется выбрать роль" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

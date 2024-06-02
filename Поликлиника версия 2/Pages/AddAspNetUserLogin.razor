@@ -1,0 +1,52 @@
+@page "/add-asp-net-user-login"
+
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Добавление логина пользователя</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить AspNetUserLogin</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.AspNetUserLogin" Data="@aspNetUserLogin" Visible="@(aspNetUserLogin != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Поставщик услуг входа в систему *" Component="LoginProvider" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetUserLogin.LoginProvider" Name="LoginProvider" Placeholder="Поставщик логина" />
+                    <RadzenRequiredValidator Component="LoginProvider" Text="Требуется поставщик услуг для входа в систему" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Ключ поставщика *" Component="ProviderKey" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetUserLogin.ProviderKey" Name="ProviderKey" Placeholder="Ключ поставщика"/>
+                    <RadzenRequiredValidator Component="ProviderKey" Text="Требуется ключ поставщика" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Отображаемое имя поставщика" Component="ProviderDisplayName" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@aspNetUserLogin.ProviderDisplayName" Name="ProviderDisplayName" Placeholder="Имя поставщика" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пользователь *" Component="AspNetUser" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@aspNetUsersForUserId" TextProperty="Email" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите пользователя" style="display: block; width: 100%" @bind-Value="@aspNetUserLogin.UserId" Name="UserId"
+                           />
+                <RadzenRequiredValidator Component="UserId" Text="Требуется выбрать пользователя" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

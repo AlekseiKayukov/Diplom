@@ -1,0 +1,8 @@
+{
+  "AddressEmail": "kayukov0906@mail.ru",
+  "AddressSMPT": "smtp.mail.ru",
+  "Port": 587,
+  "Password": "nzAM56iuvqXpf4uUBNnQ",
+  "Subject": "Запись в поликлинику",
+  "Body": "Кабинет и время приема следующие:"
+}

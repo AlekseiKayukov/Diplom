@@ -1,0 +1,47 @@
+@page "/application-roles"
+@attribute [Authorize(Roles="Администратор")]
+
+<PageTitle>Роли приложения</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Роли приложения" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Добавить" Click="@AddClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn SizeMD="12">
+            <RadzenAlert Size="AlertSize.Large" Shade="Shade.Light" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Title="Не удается удалить роль" Visible="@errorVisible">@error</RadzenAlert>
+            <RadzenDataGrid @ref="grid0" AllowFiltering="true" Density="Density.Compact" AllowPaging="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+                            AllowSorting="true" Data="@roles" TItem="Polyclinic.Models.ApplicationRole" EmptyText="Нет записей для отображения" RowSelect=@ClickDataGridRow
+                            EndsWithText="Заканчивается словами" EnumFilterSelectText="Выбирать..." EnumNullFilterText="Нет значений" 
+                            EqualsText="Равняется" ExpandChildItemAriaLabel="Разверните дочерний элемент" ExpandGroupAriaLabel="Расширить группу" 
+                            FilterText="Фильтр" FilterValueArialLabel="значение фильтра" FirstPageAriaLabel="Перейти на первую страницу." 
+                            FirstPageTitle="Первая страница." GreaterThanText="Больше, чем" GreaterThanOrEqualsText="Больше или равно" 
+                            IsEmptyText="Пуст" IsNotEmptyText="Не является пустым" IsNotNullText="Не равно нулю" IsNullText="Равно нулю" 
+                            LastPageAriaLabel="Перейти к последней странице." LastPageTitle="Последняя страница" LessThanOrEqualsText="Меньше или равно" 
+                            LessThanText="Меньше, чем" LogicalOperatorArialLabel="оператор логического фильтра" NextPageAriaLabel="Перейдите на следующую страницу." 
+                            NextPageTitle="Следующая страница" NotEqualsText="Не равны" OrOperatorText="Или" PageAriaLabelFormat="Перейти на страницу {0}." 
+                            PageSizeText="элементы на странице" PageTitleFormat="Страница {0}" PagingSummaryFormat="Страница {0} из {1} ({2} элементов)" 
+                            PrevPageAriaLabel="Перейдите на предыдущую страницу." PrevPageTitle="Предыдущая страница" RemoveGroupArialLabel="Удалить группу" 
+                            SecondFilterOperatorArialLabel="второй оператор фильтра" SecondFilterValueArialLabel="второе значение фильтра" 
+                            SelectVisibleColumnsArialLabel="выберите видимые столбцы" StartsWithText="Начинается с" AndOperatorText="И" ApplyFilterText="Применить" 
+                            ClearFilterText="Очистить" AllColumnsText="Все" ColumnsShowingText="столбцы, показывающие" ColumnsText="Столбцы" 
+                            ContainsText="Содержит" DoesNotContainText="Не содержит" FilterOperatorArialLabel="оператор фильтра">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Polyclinic.Models.ApplicationRole" Property="Name" Title="Название" />
+                    <RadzenDataGridColumn TItem="Polyclinic.Models.ApplicationRole" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                        <Template Context="role">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"
+                                Variant="Variant.Flat" Shade="Shade.Lighter" Click="@(() => DeleteClick(role))" @onclick:stopPropagation="true" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>

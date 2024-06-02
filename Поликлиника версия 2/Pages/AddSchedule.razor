@@ -1,0 +1,71 @@
+@page "/add-schedule"
+
+@attribute [Authorize(Roles = "Администратор")]
+
+<PageTitle>Добавление расписания</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить расписание</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.Schedule" Data="@schedule" Visible="@(schedule != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Дата *" Component="DateStart" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="dd/MM/yyyy" ShowTime="false" style="display: block; width: 100%" @bind-Value="@schedule.DateStart" Name="DateStart" Placeholder="00.00.0000" />
+                    <RadzenRequiredValidator Component="DateStart" Text="Требуется указать дату начала" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Время начала *" Component="TimeStart" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker style="display: block; width: 100%" @bind-Value="@schedule.TimeStart" Name="TimeStart" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Placeholder="00:00" />
+                <RadzenRequiredValidator Component="TimeStart" Text="Требуется указать время начала" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Время окончания *" Component="TimeEnd" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker style="display: block; width: 100%" @bind-Value="@schedule.TimeEnd" Name="TimeEnd" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Placeholder="00:00" />
+                <RadzenRequiredValidator Component="TimeEnd" Text="Требуется указать время окончания" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Длительность *" Component="Duration" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@schedule.Duration" Name="Duration" Min="1" Placeholder="30"/>
+                <RadzenRequiredValidator Component="Duration" Text="Требуется указать длительность" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Кабинет *" Component="Cabinet" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@schedule.Cabinet" Name="Cabinet" Placeholder="410-1"/>
+                <RadzenRequiredValidator Component="Cabinet" Text="Требуется указать кабинет" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Доктор *" Component="Doctor" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid Data="@doctorsForIdDoctor" TextProperty="DoctorFullName" ValueProperty="Id" AllowClear=true EmptyText="Нет записей для отображения"
+                         Placeholder="Выберите доктора" style="display: block; width: 100%" @bind-Value="@schedule.IdDoctor" Name="IdDoctor" SearchTextPlaceholder="Поиск..."
+                                        AllowFiltering="false" AllowSorting="false" ShowSearch="false" FilterAsYouType="false" FocusFilterOnPopup="false" />
+                <RadzenRequiredValidator Component="IdDoctor" Text="Требуется выбрать доктор" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

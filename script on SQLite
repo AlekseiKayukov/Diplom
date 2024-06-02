@@ -1,0 +1,105 @@
+--CREATE DATABASE Policlinik USE Policlinik
+
+CREATE TABLE Gender (
+    Id_Gender INT PRIMARY KEY,
+    Title NVARCHAR(7)
+);
+
+INSERT INTO Gender (Id_Gender, Title) VALUES (1, 'Male');
+INSERT INTO Gender (Id_Gender, Title) VALUES (2, 'Female');
+
+CREATE TABLE Diagnosis (
+    Id_Diagnosis INT PRIMARY KEY,
+    Title NVARCHAR(100)
+);
+
+INSERT INTO Diagnosis (Id_Diagnosis, Title) VALUES (1, 'Hypertension');
+INSERT INTO Diagnosis (Id_Diagnosis, Title) VALUES (2, 'Eczema');
+INSERT INTO Diagnosis (Id_Diagnosis, Title) VALUES (3, 'Migraine');
+
+CREATE TABLE Doctor (
+    Id_Doctor INT PRIMARY KEY,
+    Id_Gender INT,
+    FOREIGN KEY (Id_Gender) REFERENCES Gender(Id_Gender)
+);
+
+INSERT INTO Doctor (Id_Doctor, Id_Gender) VALUES (1, 2);
+
+CREATE TABLE Schedule (
+    Id_Schedule INT PRIMARY KEY,
+    Date_Start DATE,
+    Time_Start TIME,
+    Time_End TIME,
+    Duration INT,
+    Cabinet NVARCHAR(30),
+    Id_Doctor INT,
+    FOREIGN KEY (Id_Doctor) REFERENCES Doctor(Id_Doctor)
+);
+
+INSERT INTO Schedule (Id_Schedule, Date_Start, Time_Start, Time_End, Duration, Cabinet, Id_Doctor) VALUES (1, '2022-10-10', '10:00:00', '12:00:00', 120, 'Room 101', 1);
+
+CREATE TABLE Patient (
+    Id_Patient INT PRIMARY KEY,
+    Surname NVARCHAR(50),
+    Name NVARCHAR(50),
+    Forename NVARCHAR(50),
+    Place_Residence NVARCHAR(255),
+    Address NVARCHAR(100),
+    Phone NVARCHAR(20),
+    Email NVARCHAR(250),
+    Date_Of_Birth DATE,
+    Id_Gender INT,
+    FOREIGN KEY (Id_Gender) REFERENCES Gender(Id_Gender)
+);
+
+INSERT INTO Patient(ID_Patient, Surname, Name, Forename, Place_Residence, Address, Phone, Email, Date_Of_Birth, Id_Gender) VALUES (1, 'Taylor', 'David', 'Patient', 'Urban area', '123 Main St', '123-456-7890', 'patient1@example.com', '1990-05-15', 1);
+
+CREATE TABLE Identification_Patient (
+    Id INT PRIMARY KEY,
+    Number_Card INT,
+    MHI_policy NVARCHAR(19),
+	VMI_policy NVARCHAR(19),
+    Passport_series NVARCHAR(5),
+    Passport_number NVARCHAR(6),
+    Date_of_issue DATE,
+	Id_Patient INT REFERENCES Patient(Id_Patient)
+);
+
+INSERT INTO Identification_Patient (ID, Number_Card, MHI_policy, VMI_policy, Passport_series, Passport_number, Date_of_issue, Id_Patient) VALUES (1, 123456789, '111111111111111', '222222222222222', 'AA111', '123456', '2010-01-01', 1);
+
+CREATE TABLE Visit (
+    Id_Visit INT PRIMARY KEY,
+    Date_Visit DATE,
+    Time_Visit TIME,
+    Complaint NVARCHAR(500),
+    Appointments NVARCHAR(500),
+    Id_Diagnosis INT,
+    Id_Patient INT,
+    Status NVARCHAR(20),
+    FOREIGN KEY (Id_Diagnosis) REFERENCES Diagnosis(Id_Diagnosis),
+    FOREIGN KEY (Id_Patient) REFERENCES Patient(Id_Patient)
+);
+
+INSERT INTO Visit (Id_Visit, Date_Visit, Time_Visit, Complaint, Appointments, Id_Diagnosis, Id_Patient, Status) 
+VALUES (1, '2022-10-10', '10:00:00', 'Chest pain', 'Prescribed medication', 1, 1, 'Scheduled');
+
+CREATE TABLE Record (
+    Id_Record INT PRIMARY KEY,
+    Id_Schedule INT,
+    Time_period TIME,
+    Id_Patient INT,
+    FOREIGN KEY (Id_Schedule) REFERENCES Schedule(Id_Schedule),
+    FOREIGN KEY (Id_Patient) REFERENCES Patient(Id_Patient)
+);
+
+INSERT INTO Record (Id_Record, Id_Schedule, Time_period, Id_Patient) VALUES (1, 1, '10:00:00', 1);
+
+CREATE TABLE Medical_Record (
+    Id_Medical_Record INT PRIMARY KEY,
+    Id_Patient INT,
+    Date_of_Record DATE,
+    Description NVARCHAR(255),
+    FOREIGN KEY (Id_Patient) REFERENCES Patient(Id_Patient)
+);
+
+INSERT INTO Medical_Record (Id_Medical_Record, Id_Patient, Date_of_Record, Description) VALUES (1, 1, '2022-10-10', 'Patient presented with chest pain and hypertension symptoms.');

@@ -1,0 +1,55 @@
+--CREATE DATABASE Policlinik USE Policlinik
+
+CREATE TABLE Gender (
+    Id_gender INT PRIMARY KEY,
+    Title NVARCHAR(7)
+);
+
+INSERT INTO Gender (Id_gender, Title) VALUES (1, 'Мужской');
+INSERT INTO Gender (Id_gender, Title) VALUES (2, 'Женский');
+
+CREATE TABLE Patient (
+    Id_patient INT PRIMARY KEY,
+    Surname NVARCHAR(50),
+    Name NVARCHAR(50),
+    Forename NVARCHAR(50),
+    Place_residence NVARCHAR(255),
+    Address NVARCHAR(100),
+    Phone NVARCHAR(20),
+    Email NVARCHAR(250),
+    Date_of_birth DATE,
+    Id_gender INT,
+    FOREIGN KEY (Id_gender) REFERENCES Gender(Id_gender)
+);
+
+INSERT INTO Patient(ID_patient, Surname, Name, Forename, Place_residence, Address, Phone, Email, Date_of_birth, Id_gender) VALUES (1, 'Taylor', 'David', 'Patient', 'Urban area', '123 Main St', '123-456-7890', 'patient1@example.com', '1990-05-15', 1);
+
+CREATE TABLE Identification_Patient (
+    Id_identification INT PRIMARY KEY,
+    Number_card INT,
+    MHI_policy NVARCHAR(19),
+    VMI_policy NVARCHAR(19),
+    Passport_series NVARCHAR(5),
+    Passport_number NVARCHAR(6),
+    Date_of_issue DATE,
+    Id_patient INT REFERENCES Patient(Id_patient)
+);
+
+INSERT INTO Identification_Patient (Id_identification, Number_card, MHI_policy, VMI_policy, Passport_series, Passport_number, Date_of_issue, Id_patient) VALUES (1, 123456789, '111111111111111', '222222222222222', 'AA111', '123456', '2010-01-01', 1);
+
+CREATE TABLE Service (
+    Id_service INT PRIMARY KEY,
+    Title NVARCHAR(150)
+);
+
+INSERT INTO Service (Id_service, Title) VALUES (1, 'ЭКГ');
+
+CREATE TABLE Record (
+    Id_record INT PRIMARY KEY,
+    Id_patient INT,
+    Id_service INT,
+    FOREIGN KEY (Id_patient) REFERENCES Patient(Id_patient),
+    FOREIGN KEY (Id_service) REFERENCES Service(Id_service)
+);
+
+INSERT INTO Record (Id_record, Id_patient, Id_service) VALUES (1,1,1);

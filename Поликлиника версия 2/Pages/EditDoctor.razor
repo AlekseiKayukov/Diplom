@@ -1,0 +1,100 @@
+@page "/edit-doctor"
+
+@attribute [Authorize(Roles = "Администратор")]
+
+<PageTitle>Редактирование доктора</PageTitle>
+<RadzenRow>
+    <RadzenColumn SizeMD="9">
+    <RadzenLabel style="font-weight: bold" Text="Объект больше не доступен." Visible="@(!canEdit)" />
+    </RadzenColumn>
+    <RadzenColumn SizeMD="3">
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" style="margin-bottom: 20px" Text="Закрыть" Visible="@(!canEdit)" Click="@CancelButtonClick" />
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow>
+    <RadzenColumn SizeMD="9">
+    <RadzenLabel style="font-weight: bold" Text="Другой пользователь внес противоречивые изменения в одно или несколько измененных вами полей. Пожалуйста, перезагрузите." Visible="@hasChanges" />
+    </RadzenColumn>
+    <RadzenColumn SizeMD="3">
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="autorenew" style="margin-bottom: 20px" Text="Обновить" Visible="@hasChanges" Click="@ReloadButtonClick" />
+    </RadzenColumn>
+</RadzenRow>
+
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Не удается сохранить доктора</RadzenAlert>
+        <RadzenTemplateForm TItem="Polyclinic.Models.data.Doctor" Data="@doctor" Visible="@(doctor != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Фамилия *" Component="Surname" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@doctor.Surname" Name="Surname" Placeholder="Петров"/>
+                <RadzenRequiredValidator Component="Surname" Text="Требуется указать фамилия" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Имя *" Component="Name" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@doctor.Name" Name="Name" Placeholder="Петр" />
+                <RadzenRequiredValidator Component="Name" Text="Требуется указать имя" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Отчество" Component="Forename" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@doctor.Forename" Name="Forename" Placeholder="Петрович" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Телефон *" Component="Phone" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenMask style="display: block; width: 100%" @bind-Value="@doctor.Phone" Name="Phone" Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000"/>
+                <RadzenRequiredValidator Component="Phone" Text="Требуется указать телефон" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пол *" Component="Gender" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@gendersForIdGender" TextProperty="Title" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите пол" style="display: block; width: 100%" @bind-Value="@doctor.IdGender" Name="IdGender" SearchTextPlaceholder="Поиск..." EmptyText="Нет записей для отображения"
+                           />
+                <RadzenRequiredValidator Component="IdGender" Text="Требуется выбрать пол" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Специализация *" Component="Specialization" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@specializationsForIdSpecialization" TextProperty="Title" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите специализацию" style="display: block; width: 100%" @bind-Value="@doctor.IdSpecialization" Name="IdSpecialization" SearchTextPlaceholder="Поиск..." EmptyText="Нет записей для отображения"
+                           />
+                <RadzenRequiredValidator Component="IdSpecialization" Text="Требуется выбрать специализацию" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Пользователь *" Component="AspNetUser" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@aspNetUsersForIdUser" TextProperty="Email" ValueProperty="Id" AllowClear=true
+                         Placeholder="Выберите пользователя " style="display: block; width: 100%" @bind-Value="@doctor.IdUser" Name="IdUser" SearchTextPlaceholder="Поиск..." EmptyText="Нет записей для отображения"
+                           />
+                <RadzenRequiredValidator Component="IdUser" Text="Требуется выбрать пользователя" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Сохранить" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Закрыть" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+
